@@ -1,49 +1,45 @@
-melon_cost = 1.00
+MELON_COST = 1.00
 
-customer1_name = "Joe"
-customer1_melons = 5
-customer1_paid = 5.00
+def customer_orders(file_name):
+	"""Go through the given file and create a dictionary with entries for each order."""
+	orders_dict = {}
+	file_obj = open(file_name)
+	file_contents = file_obj.read()
+	file_obj.close()
 
-customer2_name = "Frank"
-customer2_melons = 6
-customer2_paid = 6.00
+	melon_orders = file_contents.split("\n")
+	for order in melon_orders:
+		if order != "":
+			# Ignore empty lines
 
-customer3_name = "Sally"
-customer3_melons = 3
-customer3_paid = 3.00
+			# Split each order into a list of the customer's name, the amount of melons bought, and
+			# the amount that the customer paid
+			order = order.split(",")
 
-customer4_name = "Sean"
-customer4_melons = 9
-customer4_paid = 9.50
+			customer_name = order[1]
+			customer_melons = float(order[2])
+			customer_paid = float(order[3])
 
-customer5_name = "David"
-customer5_melons = 4
-customer5_paid = 4.00
+			orders_dict[customer_name] = (customer_melons, customer_paid)
 
-customer6_name = "Ashley"
-customer6_melons = 3
-customer6_paid = 2.00
+	return orders_dict
 
-customer1_expected = customer1_melons * melon_cost
-if customer1_expected != customer1_paid:
-    print customer1_name, "paid %.2f, expected %.2f"%(customer1_paid, customer1_expected)
+def are_melons_underpaid(customer_name, customer_melons, customer_paid):
+	"""Check if the given customer didn't pay the right amount, if they didn't then print this
+	information."""
+	customer_expected = customer_melons * MELON_COST
+	if customer_expected != customer_paid:
+		print customer_name, "paid %.2f, expected %.2f" % (customer_paid, customer_expected)
 
-customer2_expected = customer2_melons * melon_cost
-if customer2_expected != customer2_paid:
-    print customer2_name, "paid %.2f, expected %.2f"%(customer2_paid, customer2_expected)
+def print_report():
+	"""Print out a report that shows the incorrect orders."""
+	orders_dict = customer_orders("customer_orders.csv")
+	
+	for customer_name, value in orders_dict.iteritems():
+		# Dictionary key = customer's name
 
-customer3_expected = customer3_melons * melon_cost
-if customer3_expected != customer3_paid:
-    print customer3_name, "paid %.2f, expected %.2f"%(customer3_paid, customer3_expected)
+		customer_melons = value[0]
+		customer_paid = value[1]
+		are_melons_underpaid(customer_name, customer_melons, customer_paid)
 
-customer4_expected = customer4_melons * melon_cost
-if customer4_expected != customer4_paid:
-    print customer4_name, "paid %.2f, expected %.2f"%(customer4_paid, customer4_expected)
-
-customer5_expected = customer5_melons * melon_cost
-if customer5_expected != customer5_paid:
-    print customer5_name, "paid %.2f, expected %.2f"%(customer5_paid, customer5_expected)
-
-customer6_expected = customer6_melons * melon_cost
-if customer6_expected != customer6_paid:
-    print customer6_name, "paid %.2f, expected %.2f"%(customer6_paid, customer6_expected)
+print_report()
